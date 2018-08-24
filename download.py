@@ -44,8 +44,10 @@ def download_ticker(ticker, output_dir):
 
 if __name__ == '__main__':
     df = pd.read_csv('companylist.csv')
+    # Nasdaq 100 
+    df = df.sort_values(by=['MarketCap'], ascending=False)
+    df = df[:100]
     for symbol in df.Symbol:
         print('Downloading {}'.format(symbol))
         download_ticker(symbol, 'stock_data')
-
 
