@@ -1,6 +1,6 @@
 '''
 Downloads stock data from stooq.com. The default data is nasdaq 
-but any stock stmbol can be downloaded using this scrip if the 
+but any stock symbol can be downloaded using this scrip if the 
 stock is available on stooq.com
 '''
 
