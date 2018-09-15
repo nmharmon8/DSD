@@ -1,15 +1,24 @@
 '''
-Downloads stock data from nasdaq.
+Downloads stock data from alphavantage
 '''
 import pandas as pd 
 import os
-import requests
-from bs4 import BeautifulSoup
 import time
+import urllib2
+from StringIO import StringIO
+
+if 'ALPHA_VANTAGE_KEY' not in os.environ:
+    print('Get a free API key from [AlphaVantage](https://www.alphavantage.co/support/#api-key)\n\nexport the API key as an environmental variable. I recommend just adding it to your bashrc so it is always available.\n\necho "export ALPHA_VANTAGE_KEY=<Your API Key Here>" >> ~/.bashrc\n#Should look somthing like "export ALPHA_VANTAGE_KEY=AHKDSFJHUDFDJD"\nsource ~/.bashrc')
+    exit()
+
+
+ALPHA_VANTAGE_KEY = os.environ['ALPHA_VANTAGE_KEY']
+
+
 '''
 Saves data to a file
 '''
-def save_df(df, output_dir, filename):
+def save(stock_csv, output_dir, filename):
     try:
         #the output dir may not exist
         if not os.path.exists(output_dir):
@@ -21,59 +30,37 @@ def save_df(df, output_dir, filename):
     filepath = os.path.join(output_dir, filename)
     print(filepath)
     try:
+       df = pd.read_csv(StringIO(stock_csv))
+       df = df.sort_values(by='timestamp')  
        df.to_csv(filepath, index=False)
     except Exception as ex:
         print('Could not open file {} to write data'.format(filepath))
         print(ex)
 
 
-def html_table_to_df(html):
-    soup = BeautifulSoup(html, 'html.parser')
-    table = soup.find('table')
-    columns = [column.text.replace('"', '').strip().split(' ')[0].strip() for column in table.find_all('th')]
-    rows = []
-
-    for row in table.find_all('tr'):
-        row = [val.text.encode('utf8').strip() for val in row.find_all('td')]
-        #Make sure the list is not empty
-        if row:
-            rows.append(row)
-    df = pd.DataFrame(data=rows, columns=columns)
-    df['Date'] = pd.to_datetime(df.Date)
-    df = df.sort_values(by='Date')
-    df['Volume'] = df['Volume'].map(lambda x: float(x.replace(',', '')))
-    return df
-
-
-def try_download(ticker):
+def try_download(symbol):
     try:
-        response = requests.post('https://www.nasdaq.com/symbol/{}/historical'.format(ticker.lower()), headers = {'Content-Type': 'application/json'}, data="10y|false|{}".format(ticker.upper()))
-        return response
-    except:
+        # Keep call frequency below threshold 
+        time.sleep(12)
+        response = urllib2.urlopen('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={}&apikey={}&datatype=csv&outputsize=full'.format(symbol, ALPHA_VANTAGE_KEY))
+        stock_csv = response.read()
+        print(stock_csv)
+        return stock_csv
+    except Exception as ex:
         return None
 
 '''
-Given a stock ticker (aka 'tsla') will download and save the data to the
-out put dir as a csv 
+Given a stock symbol (aka 'tsla') will download and save the data to the
+output dir as a csv 
 '''
-def download_ticker(ticker, output_dir, retry_count=4):
-    try:
-        response = try_download(ticker)
-        while (not response or not response.text or 'table' not in response.text) and retry_count > 0:
-            print('Retrying.....')
-            time.sleep(5)
-            response = try_download(ticker)
-            retry_count -= 1
+def download_symbol(symbol, output_dir, retry_count=4):
 
-        if response.status_code == 200:
-            df = html_table_to_df(response.text)
-            save_df(df, output_dir, '{}.csv'.format(ticker))
-        else:
-            print('Download failed with retry')
-    except Exception as ex:
-        print('Could not download {}'.format(ticker))
-        print(ex)
-
+    stock_csv = try_download(symbol)
+    if stock_csv:
+        save(stock_csv, output_dir, '{}.csv'.format(symbol))
+    else:
+        print('Failed to download {}'.format(symbol))
+       
 
 if __name__ == '__main__':
     df = pd.read_csv('companylist.csv')
@@ -82,6 +69,6 @@ if __name__ == '__main__':
     df = df[:500]
     for symbol in df.Symbol:
         print('Downloading {}'.format(symbol))
-        download_ticker(symbol, 'stock_data')
+        download_symbol(symbol, 'stock_data')
 
 
