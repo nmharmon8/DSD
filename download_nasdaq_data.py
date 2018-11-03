@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import time
 from urllib.request import urlopen
-from io import StringIO
+from io import BytesIO
 import inspect
 
    
@@ -35,7 +35,7 @@ def save(stock_csv, output_dir, filename):
     filepath = os.path.join(output_dir, filename)
     print(filepath)
     try:
-       df = pd.read_csv(StringIO(stock_csv))
+       df = pd.read_csv(BytesIO(stock_csv))
        df = df.sort_values(by='timestamp')  
        df.to_csv(filepath, index=False)
     except Exception as ex:
@@ -52,7 +52,6 @@ def try_download(symbol):
         return stock_csv
     except Exception as ex:
         return None
-
 
 '''
 Given a stock symbol (aka 'tsla') will download and save the data to the
@@ -76,8 +75,6 @@ def downloadNTopMarketCapCompanies(n, output_dir='stock_data'):
     for symbol in df.Symbol:
         print('Downloading {}'.format(symbol))
         download_symbol(symbol, output_dir)
-
-
 
 if __name__ == '__main__':
     # Nasdaq 500 
