@@ -5,13 +5,13 @@ A simple script to download stock data from alphavantage.co. Specifically it is 
 
 *Dependencies*:
 
-  * [Python 2.7](https://www.python.org/download/releases/2.7/)
+  * [Python 3](https://www.python.org/download/releases/3.0/)
 
   * [Numpy](http://www.numpy.org/)
 
   * [Pandas](https://pandas.pydata.org/)
   
-  * [urllib2](https://docs.python.org/2/library/urllib2.html)
+  * [urllib](https://docs.python.org/3/library/urllib.html)
   
 
 
@@ -35,5 +35,5 @@ source ~/.bashrc
 You are now ready to run!
 
 ```bash
-python download.py
+python download_nasdaq_data.py
 ```
