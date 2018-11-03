@@ -16,10 +16,10 @@ A simple script to download stock data from alphavantage.co. Specifically it is 
 
 
 ```bash
-pip install numpy
-pip install pandas
-pip install urllib2
-pip install numpy
+pip3 install numpy
+pip3 install pandas
+pip3 install urllib2
+pip3 install numpy
 ```
 
 Get a free API key from [AlphaVantage](https://www.alphavantage.co/support/#api-key)
