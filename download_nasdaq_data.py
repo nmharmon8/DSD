@@ -49,7 +49,6 @@ def try_download(symbol):
         time.sleep(12)
         response = urlopen('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={}&apikey={}&datatype=csv&outputsize=full'.format(symbol, ALPHA_VANTAGE_KEY))
         stock_csv = response.read()
-        print(stock_csv)
         return stock_csv
     except Exception as ex:
         return None
