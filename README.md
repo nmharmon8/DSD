@@ -13,15 +13,12 @@ A simple script to download stock data from alphavantage.co. Specifically it is 
   
   * [urllib](https://docs.python.org/3/library/urllib.html)
   
-
-
+### Install
 ```bash
-pip3 install numpy
-pip3 install pandas
-pip3 install urllib2
-pip3 install numpy
+cd DSD
+sudo python setup.py install
 ```
-
+### Setup API
 Get a free API key from [AlphaVantage](https://www.alphavantage.co/support/#api-key)
 
 export the API key as an environmental variable. I recommend just adding it to your bashrc so it is always available.
@@ -32,8 +29,21 @@ echo "export ALPHA_VANTAGE_KEY=<Your API Key Here>" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-You are now ready to run!
+### Usage
 
-```bash
-python download_nasdaq_data.py
+```python
+from dsd import download_nasdaq_data as dnd
+
+'''
+Downloads multiple companies
+'''
+dnd.downloadNTopMarketCapCompanies(500, output_dir='stock_data')
+
+'''
+Given a stock symbol (aka 'tsla') will download and save the data to the
+output dir as a csv 
+'''
+dnd.download_symbol(symbol, output_dir, retry_count=4)
 ```
+
+Have fun.
