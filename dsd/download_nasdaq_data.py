@@ -23,7 +23,7 @@ ALPHA_VANTAGE_KEY = os.environ['ALPHA_VANTAGE_KEY']
 '''
 Saves data to a file
 '''
-def save(stock_csv, output_dir, filename):
+def __save(stock_csv, output_dir, filename):
     try:
         #the output dir may not exist
         if not os.path.exists(output_dir):
@@ -43,7 +43,7 @@ def save(stock_csv, output_dir, filename):
         print(ex)
 
 
-def try_download(symbol):
+def __try_download(symbol):
     try:
         # Keep call frequency below threshold 
         time.sleep(12)
@@ -59,9 +59,9 @@ output dir as a csv
 '''
 def download_symbol(symbol, output_dir, retry_count=4):
 
-    stock_csv = try_download(symbol)
+    stock_csv = __try_download(symbol)
     if stock_csv:
-        save(stock_csv, output_dir, '{}.csv'.format(symbol))
+        __save(stock_csv, output_dir, '{}.csv'.format(symbol))
     else:
         print('Failed to download {}'.format(symbol))
        
