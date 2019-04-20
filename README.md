@@ -29,7 +29,7 @@ echo "export ALPHA_VANTAGE_KEY=<Your API Key Here>" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-You are ready!
+### Usage
 
 ```python
 from dsd import download_nasdaq_data as dnd
