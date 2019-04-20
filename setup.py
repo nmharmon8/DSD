@@ -13,4 +13,9 @@ setup(
         "pandas >= 0.24.2",
         "urllib3 >= 1.13.1",
     ],
+    package_data = {
+        # If any package contains *.txt or *.rst files, include them:
+        '': ['*.csv',],
+    },
+    include_package_data=True,
 )
