@@ -13,12 +13,12 @@ A simple script to download stock data from alphavantage.co. Specifically it is 
   
   * [urllib](https://docs.python.org/3/library/urllib.html)
   
-###Install
+### Install
 ```bash
 cd DSD
 sudo python setup.py install
 ```
-###Setup API
+### Setup API
 Get a free API key from [AlphaVantage](https://www.alphavantage.co/support/#api-key)
 
 export the API key as an environmental variable. I recommend just adding it to your bashrc so it is always available.
